@@ -8,11 +8,15 @@ from flask import Blueprint, render_template, current_app, request, redirect, \
 auth_blueprint = Blueprint('auth', __name__)
 
 
+def logged_in() -> bool:
+    return 'user_id' in session and 'access_token' in session and \
+           'expires_in' in session
+
+
 def require_auth(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        if 'user_id' in session and 'access_token' in session and \
-                'expires_in' in session:
+        if logged_in():
             if time.time() <= session['expires_in']:
                 return func(*args, **kwargs)
             else:
@@ -20,11 +24,14 @@ def require_auth(func):
                 return redirect('/login')
         else:
             return redirect('/login')
+
     return wrapper
 
 
 @auth_blueprint.route('/login', methods=['GET'])
 def index():
+    if logged_in():
+        return redirect('/')
     return render_template('index.html', url=current_app.config['AUTH_URL'])
 
 
