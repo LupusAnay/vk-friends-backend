@@ -1,3 +1,9 @@
 <!doctype html>
-<title>VK Friends</title>
-<a href={{ url }}>Войти</a>
+<head>
+    <title>VK Friends</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<button onclick="location.href='{{ url }}';">Войти</button>
+</body>

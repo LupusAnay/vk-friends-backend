@@ -1,6 +1,25 @@
 <!doctype html>
-<title>VK Friends</title>
-{% for friend in friends %}
-    <h2>{{ friend['first_name'] }} {{ friend['last_name'] }}</h2>
-    <p>ID: {{ friend['id'] }}</p>
-{% endfor %}
+<head>
+    <title>VK Friends</title>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<div id="app">
+    {% for friend in friends %}
+        <div class="person">
+            <div class="avatar_wrapper">
+                <img class="avatar" src="{{ friend['photo_200_orig'] }}"
+                     alt="Avatar">
+            </div>
+            <div class="info">
+                <h2>{{ friend['first_name'] }} {{ friend['last_name'] }}</h2>
+                <p>{{ friend['status'] }}</p>
+                {% if friend['city'] and friend['city']['title'] %}
+                <p>{{ friend['city']['title'] }}</p>
+                {%  endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+</body>

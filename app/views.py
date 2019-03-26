@@ -58,7 +58,7 @@ def friends():
         'user_id': session['user_id'],
         'access_token': session['access_token'],
         'count': 5,
-        'fields': 'nickname',
+        'fields': 'nickname,photo_200_orig,status,city',
         'v': current_app.config['API_VERSION']
     }
 
