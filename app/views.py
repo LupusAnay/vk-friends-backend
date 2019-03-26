@@ -5,6 +5,9 @@ import requests
 from flask import Blueprint, render_template, current_app, request, redirect, \
     session
 
+from app.models import fetch_friends, ModelError, fetch_access_data, \
+    fetch_user_data
+
 auth_blueprint = Blueprint('auth', __name__)
 
 
@@ -29,55 +32,43 @@ def require_auth(func):
 
 
 @auth_blueprint.route('/login', methods=['GET'])
-def index():
+def login():
     if logged_in():
         return redirect('/')
-    return render_template('index.html', url=current_app.config['AUTH_URL'])
+    return render_template('login.html', url=current_app.config['AUTH_URL'])
 
 
 @auth_blueprint.route('/auth_callback', methods=['GET'])
-def login():
+def auth_callback():
     code = request.args.get('code')
     if not code:
-        return render_template('auth_error.html', message='There is no code')
+        return render_template('error.html', message='There is no code')
 
-    payload = {'client_id': current_app.config['APP_ID'],
-               'client_secret': current_app.config['VK_APP_SECRET'],
-               'redirect_uri': current_app.config['REDIRECT_URI'],
-               'code': code}
+    try:
+        access_data = fetch_access_data(code)
+        user_data = fetch_user_data(access_data['user_id'],
+                                    access_data['access_token'])
+    except ModelError as e:
+        return render_template('error.html', message=e.message)
 
-    response = requests.get('https://oauth.vk.com/access_token',
-                            params=payload)
-    if response.status_code != 200:
-        return render_template('auth_error.html',
-                               message='Token request error')
-
-    data = response.json()
-    data['expires_in'] = time.time() + data['expires_in']
-    session.update(data)
+    session['username'] = f"{user_data['first_name']} {user_data['last_name']}"
+    session.update(access_data)
     return redirect('/')
 
 
 @auth_blueprint.route('/', methods=['GET'])
 @require_auth
 def friends():
-    payload = {
-        'user_id': session['user_id'],
-        'access_token': session['access_token'],
-        'count': 5,
-        'fields': 'nickname,photo_200_orig,status,city',
-        'v': current_app.config['API_VERSION']
-    }
+    username = session['username']
 
-    response = requests.get('https://api.vk.com/method/friends.get',
-                            params=payload)
+    try:
+        friends_dict = fetch_friends(session['user_id'],
+                                     session['access_token'], 5)
+    except ModelError as e:
+        return render_template('error.html', message=e.message)
 
-    if response.status_code != 200:
-        return render_template('auth_error.html', message='Not logged in')
-
-    friends_array = response.json()['response']['items']
-
-    return render_template('friends.html', friends=friends_array)
+    return render_template('friends.html', username=username,
+                           friends=friends_dict)
 
 
 @auth_blueprint.route('/logout', methods=['GET'])

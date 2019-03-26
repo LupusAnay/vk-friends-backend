@@ -6,7 +6,10 @@
 </head>
 <body>
 <div id="app">
-    <button id="logout" onclick="location.href='/logout'">Выйти</button>
+    <div id="logout">
+        <p>Авторизован как: {{ username }}</p>
+        <button onclick="location.href='/logout'">Выйти</button>
+    </div>
     {% for friend in friends %}
         <div class="person">
             <div class="avatar_wrapper">

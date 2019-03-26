@@ -14,15 +14,19 @@ body {
 #app {
     display: flex;
     justify-content: flex-start;
-    margin: auto;
+    margin: 5rem auto;
     flex-wrap: wrap;
 }
 
 #logout {
+    display: flex;
+    flex-direction: column;
     top: 0;
-    right: 0;
+    left: 0;
     position: absolute;
-    margin: .5rem;
+    color: #67678c;
+    margin: .5rem 4rem;
+    justify-content: flex-end;
 }
 
 .person {
