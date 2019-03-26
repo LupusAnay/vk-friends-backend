@@ -1,18 +1,34 @@
+import time
+from functools import wraps
+
 import requests
 from flask import Blueprint, render_template, current_app, request, redirect, \
-    make_response, session
+    session
 
 auth_blueprint = Blueprint('auth', __name__)
 
 
-@auth_blueprint.route('/', methods=['GET'])
-def index():
-    if 'user_id' in session and 'access_token' in session:
-        return redirect('/friends')
-    return render_template('index.html', url=current_app.config['AUTH_URL'])
+def require_auth(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if 'user_id' in session and 'access_token' in session and \
+                'expires_in' in session:
+            if time.time() <= session['expires_in']:
+                return func(*args, **kwargs)
+            else:
+                session.clear()
+                return redirect('/login')
+        else:
+            return redirect('/login')
+    return wrapper
 
 
 @auth_blueprint.route('/login', methods=['GET'])
+def index():
+    return render_template('index.html', url=current_app.config['AUTH_URL'])
+
+
+@auth_blueprint.route('/auth_callback', methods=['GET'])
 def login():
     code = request.args.get('code')
     if not code:
@@ -30,11 +46,13 @@ def login():
                                message='Token request error')
 
     data = response.json()
+    data['expires_in'] = time.time() + data['expires_in']
     session.update(data)
-    return redirect('/friends')
+    return redirect('/')
 
 
-@auth_blueprint.route('/friends', methods=['GET'])
+@auth_blueprint.route('/', methods=['GET'])
+@require_auth
 def friends():
     payload = {
         'user_id': session['user_id'],

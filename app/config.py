@@ -7,7 +7,7 @@ class Base:
     DEBUG = False
     APP_ID = '6913818'
     PERMISSIONS = '2'
-    REDIRECT_URI = f'{BASE_URL}/login'
+    REDIRECT_URI = f'{BASE_URL}/auth_callback'
     API_VERSION = '5.92'
     VK_APP_SECRET = os.environ.get('VK_APP_SECRET')
     SECRET_KEY = os.environ.get('SECRET_KEY', 'fake_key')
