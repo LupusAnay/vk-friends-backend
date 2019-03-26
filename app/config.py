@@ -29,4 +29,4 @@ class Development(Base):
 
 
 class Production(Base):
-    BASE_URL = 'https://herokuap.....'
+    BASE_URL = 'https://lupusanay-vk-friends.herokuapp.com/'
