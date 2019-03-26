@@ -33,7 +33,7 @@ class Development(Base):
 class Production(Base):
     ENVIRONMENT = 'production'
     BASE_URL = 'https://lupusanay-vk-friends.herokuapp.com/'
-    REDIRECT_URI = f'{BASE_URL}/login'
+    REDIRECT_URI = f'{BASE_URL}/auth_callback'
     AUTH_URL = f'https://oauth.vk.com/authorize?' \
         f"client_id={Base.APP_ID}&" \
         f'scope={Base.PERMISSIONS}&' \
