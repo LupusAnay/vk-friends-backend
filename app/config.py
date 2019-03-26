@@ -9,7 +9,7 @@ class Base:
     PERMISSIONS = '2'
     REDIRECT_URI = f'{BASE_URL}/login'
     API_VERSION = '5.92'
-    VK_APP_SECRET = os.environ.get('APP_SECRET')
+    VK_APP_SECRET = os.environ.get('VK_APP_SECRET')
     SECRET_KEY = os.environ.get('SECRET_KEY', 'fake_key')
 
     AUTH_URL = f'https://oauth.vk.com/authorize?' \
@@ -25,8 +25,11 @@ class Testing(Base):
 
 
 class Development(Base):
+    DEBUG = True
+    ENVIRONMENT = 'development'
     ...
 
 
 class Production(Base):
+    ENVIRONMENT = 'production'
     BASE_URL = 'https://lupusanay-vk-friends.herokuapp.com/'

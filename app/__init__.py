@@ -5,7 +5,7 @@ from flask import Flask
 
 def create_app(config_name: str = 'app.config.Development') -> Flask:
     app = Flask(__name__)
-    config = os.getenv('APP_SETTINGS', config_name)
+    config = os.environ.get('APP_SETTINGS', config_name)
     app.config.from_object(config)
     app.config.from_pyfile('config.cfg', silent=True)
 
