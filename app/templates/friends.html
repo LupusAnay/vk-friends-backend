@@ -1,0 +1,6 @@
+<!doctype html>
+<title>VK Friends</title>
+{% for friend in friends %}
+    <h2>{{ friend['first_name'] }} {{ friend['last_name'] }}</h2>
+    <p>ID: {{ friend['id'] }}</p>
+{% endfor %}
