@@ -78,3 +78,10 @@ def friends():
     friends_array = response.json()['response']['items']
 
     return render_template('friends.html', friends=friends_array)
+
+
+@auth_blueprint.route('/logout', methods=['GET'])
+@require_auth
+def logout():
+    session.clear()
+    return redirect('/login')

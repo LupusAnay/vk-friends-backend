@@ -18,6 +18,13 @@ body {
     flex-wrap: wrap;
 }
 
+#logout {
+    top: 0;
+    right: 0;
+    position: absolute;
+    margin: .5rem;
+}
+
 .person {
     background-color: #fff;
     border-radius: 5px;

@@ -6,6 +6,7 @@
 </head>
 <body>
 <div id="app">
+    <button id="logout" onclick="location.href='/logout'">Выйти</button>
     {% for friend in friends %}
         <div class="person">
             <div class="avatar_wrapper">
@@ -16,8 +17,8 @@
                 <h2>{{ friend['first_name'] }} {{ friend['last_name'] }}</h2>
                 <p>{{ friend['status'] }}</p>
                 {% if friend['city'] and friend['city']['title'] %}
-                <p>{{ friend['city']['title'] }}</p>
-                {%  endif %}
+                    <p>{{ friend['city']['title'] }}</p>
+                {% endif %}
             </div>
         </div>
     {% endfor %}
