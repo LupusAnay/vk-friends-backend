@@ -35,8 +35,8 @@ class Production(Base):
     BASE_URL = 'https://lupusanay-vk-friends.herokuapp.com/'
     REDIRECT_URI = f'{BASE_URL}/login'
     AUTH_URL = f'https://oauth.vk.com/authorize?' \
-        f"client_id={super().APP_ID}&" \
-        f'scope={super().PERMISSIONS}&' \
+        f"client_id={Base.APP_ID}&" \
+        f'scope={Base.PERMISSIONS}&' \
         f'redirect_uri={REDIRECT_URI}&' \
         f'response_type=code&' \
-        f'v={super().API_VERSION}'
+        f'v={Base.API_VERSION}'
